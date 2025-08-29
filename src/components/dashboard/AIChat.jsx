@@ -42,6 +42,14 @@ const AIChat = () => {
 
   const languages = ["English", "हिंदी", "मराठी", "ગુજરાતી", "தமிழ்"];
 
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      // In a real app, this would send the message to AI backend
+      console.log("Sending message:", message);
+      setMessage("");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -96,13 +104,13 @@ const AIChat = () => {
                   placeholder={`Ask your farming question in ${language}...`}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && setMessage("")}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   className="flex-1"
                 />
-                <Button size="sm">
+                <Button size="sm" onClick={() => console.log('Voice input')}>
                   <Mic className="h-4 w-4" />
                 </Button>
-                <Button size="sm" onClick={() => setMessage("")}>
+                <Button size="sm" onClick={handleSendMessage} disabled={!message.trim()}>
                   <Send className="h-4 w-4" />
                 </Button>
               </div>

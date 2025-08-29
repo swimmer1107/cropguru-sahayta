@@ -2,12 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Sprout, BarChart3, MessageCircle, Satellite, Camera, User, Menu } from "lucide-react";
 import { useState } from "react";
 
-interface NavigationProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
-const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
+const Navigation = ({ activeTab, onTabChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [

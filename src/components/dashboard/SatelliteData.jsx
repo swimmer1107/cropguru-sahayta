@@ -41,6 +41,16 @@ const SatelliteData = () => {
     { label: "Organic Matter", value: 3.2, unit: "%", status: "Adequate" }
   ];
 
+  const handleAnalyzeField = () => {
+    console.log("Analyzing field with satellite data...");
+    // In a real app, this would trigger satellite data analysis
+  };
+
+  const handleWeatherForecast = () => {
+    console.log("Fetching detailed weather forecast...");
+    // In a real app, this would fetch weather data
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -48,7 +58,7 @@ const SatelliteData = () => {
           <Satellite className="mr-2 h-6 w-6 text-primary" />
           Satellite & Weather Analysis
         </h2>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => console.log('Change location')}>
           <MapPin className="mr-1 h-4 w-4" />
           Change Location
         </Button>
@@ -105,8 +115,8 @@ const SatelliteData = () => {
                 </div>
               </div>
             ))}
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              View Full Satellite Map
+            <Button variant="outline" size="sm" className="w-full mt-4" onClick={handleAnalyzeField}>
+              Analyze Current Field Status
             </Button>
           </CardContent>
         </Card>
@@ -143,6 +153,9 @@ const SatelliteData = () => {
                 </div>
               </div>
             ))}
+            <Button variant="outline" size="sm" className="w-full" onClick={handleWeatherForecast}>
+              Get 30-Day Forecast
+            </Button>
           </CardContent>
         </Card>
       </div>

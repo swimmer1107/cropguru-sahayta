@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Camera, Upload, AlertCircle, CheckCircle, Clock } from "lucide-react";
 
 const DiseaseDetection = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const recentAnalyses = [
@@ -41,12 +41,12 @@ const DiseaseDetection = () => {
     }
   ];
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setSelectedImage(e.target?.result as string);
+        setSelectedImage(e.target?.result);
       };
       reader.readAsDataURL(file);
     }
@@ -57,6 +57,7 @@ const DiseaseDetection = () => {
     // Simulate analysis delay
     setTimeout(() => {
       setIsAnalyzing(false);
+      console.log("Image analysis complete!");
     }, 3000);
   };
 
@@ -88,7 +89,7 @@ const DiseaseDetection = () => {
           <Camera className="mr-2 h-6 w-6 text-primary" />
           Disease Detection
         </h2>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => console.log('View history')}>
           Detection History
         </Button>
       </div>
@@ -151,7 +152,7 @@ const DiseaseDetection = () => {
                         Choose File
                       </label>
                     </Button>
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={() => console.log('Take photo')}>
                       <Camera className="mr-2 h-4 w-4" />
                       Take Photo
                     </Button>
