@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Camera, Upload, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { toast } from "sonner";
+import * as api from "@/lib/api";
 
 const DiseaseDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -52,13 +54,18 @@ const DiseaseDetection = () => {
     }
   };
 
-  const analyzeImage = () => {
+  const analyzeImage = async () => {
+    if (!selectedImage) return;
     setIsAnalyzing(true);
-    // Simulate analysis delay
-    setTimeout(() => {
+    try {
+      const result = await api.analyzeDisease(selectedImage);
+      toast.success("Image analyzed and saved");
+      console.log("Analysis result:", result);
+    } catch (e) {
+      toast.error("Failed to analyze image");
+    } finally {
       setIsAnalyzing(false);
-      console.log("Image analysis complete!");
-    }, 3000);
+    }
   };
 
   const treatmentSuggestions = [
@@ -89,7 +96,18 @@ const DiseaseDetection = () => {
           <Camera className="mr-2 h-6 w-6 text-primary" />
           Disease Detection
         </h2>
-        <Button variant="outline" size="sm" onClick={() => console.log('View history')}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={async () => {
+            try {
+              const history = await api.getDiseaseHistory();
+              toast.info(`Loaded ${history.length} records`);
+            } catch (e) {
+              toast.error("Failed to load history");
+            }
+          }}
+        >
           Detection History
         </Button>
       </div>

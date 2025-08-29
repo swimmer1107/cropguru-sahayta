@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Satellite, MapPin, CloudRain, Thermometer, Droplets, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
+import * as api from "@/lib/api";
 
 const SatelliteData = () => {
   const farmData = {
@@ -41,14 +43,22 @@ const SatelliteData = () => {
     { label: "Organic Matter", value: 3.2, unit: "%", status: "Adequate" }
   ];
 
-  const handleAnalyzeField = () => {
-    console.log("Analyzing field with satellite data...");
-    // In a real app, this would trigger satellite data analysis
+  const handleAnalyzeField = async () => {
+    try {
+      await api.analyzeField();
+      toast.success("Field analysis started");
+    } catch (e) {
+      toast.error("Failed to analyze field");
+    }
   };
 
-  const handleWeatherForecast = () => {
-    console.log("Fetching detailed weather forecast...");
-    // In a real app, this would fetch weather data
+  const handleWeatherForecast = async () => {
+    try {
+      const data = await api.forecast(30);
+      toast.info(`Forecast loaded: ${data?.days?.length || 30} days`);
+    } catch (e) {
+      toast.error("Failed to fetch forecast");
+    }
   };
 
   return (
@@ -58,7 +68,18 @@ const SatelliteData = () => {
           <Satellite className="mr-2 h-6 w-6 text-primary" />
           Satellite & Weather Analysis
         </h2>
-        <Button variant="outline" size="sm" onClick={() => console.log('Change location')}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={async () => {
+            try {
+              await api.setLocation(farmData.location);
+              toast.success("Location updated");
+            } catch (e) {
+              toast.error("Failed to update location");
+            }
+          }}
+        >
           <MapPin className="mr-1 h-4 w-4" />
           Change Location
         </Button>

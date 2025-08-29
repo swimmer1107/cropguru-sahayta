@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Send, Mic, Globe } from "lucide-react";
+import { toast } from "sonner";
+import * as api from "@/lib/api";
 
 const AIChat = () => {
   const [message, setMessage] = useState("");
@@ -42,13 +44,17 @@ const AIChat = () => {
 
   const languages = ["English", "हिंदी", "मराठी", "ગુજરાતી", "தமிழ்"];
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      // In a real app, this would send the message to AI backend
-      console.log("Sending message:", message);
+  const handleSendMessage = async () => {
+    if (!message.trim()) return;
+    try {
+      await api.postChatMessage(message, language);
+      toast.success("Message sent and saved to MongoDB");
       setMessage("");
+    } catch (e) {
+      toast.error("Failed to send message");
     }
   };
+
 
   return (
     <div className="space-y-6">

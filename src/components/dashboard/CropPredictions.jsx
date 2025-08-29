@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Droplets, Sprout, Calendar } from "lucide-react";
+import { toast } from "sonner";
+import * as api from "@/lib/api";
 
 const CropPredictions = () => {
   const predictions = [
@@ -51,7 +53,18 @@ const CropPredictions = () => {
           <TrendingUp className="mr-2 h-6 w-6 text-primary" />
           Crop Yield Predictions
         </h2>
-        <Button variant="outline" size="sm">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={async () => {
+            try {
+              const preds = await api.fetchPredictions();
+              toast.info(`Loaded ${preds.length} predictions`);
+            } catch (e) {
+              toast.error("Failed to load predictions");
+            }
+          }}
+        >
           View All Crops
         </Button>
       </div>
@@ -103,11 +116,33 @@ const CropPredictions = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-2 pt-2">
-                <Button size="sm" variant="outline">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      await api.scheduleIrrigation({ crop: prediction.crop });
+                      toast.success(`Irrigation set for ${prediction.crop}`);
+                    } catch (e) {
+                      toast.error("Failed to schedule irrigation");
+                    }
+                  }}
+                >
                   <Droplets className="mr-1 h-4 w-4" />
                   Set Irrigation
                 </Button>
-                <Button size="sm" variant="outline">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      await api.createTask({ task: `Tasks for ${prediction.crop}`, crop: prediction.crop, priority: "Medium" });
+                      toast.success(`Task created for ${prediction.crop}`);
+                    } catch (e) {
+                      toast.error("Failed to schedule tasks");
+                    }
+                  }}
+                >
                   <Calendar className="mr-1 h-4 w-4" />
                   Schedule Tasks
                 </Button>

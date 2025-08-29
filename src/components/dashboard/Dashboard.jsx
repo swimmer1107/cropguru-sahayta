@@ -3,6 +3,8 @@ import CropPredictions from "./CropPredictions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import * as api from "@/lib/api";
 import { 
   TrendingUp, 
   Droplets, 
@@ -158,7 +160,19 @@ const Dashboard = () => {
                   </Badge>
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="w-full">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={async () => {
+                  try {
+                    const tasks = await api.fetchTasks();
+                    toast.info(`You have ${tasks.length} tasks`);
+                  } catch (e) {
+                    toast.error("Failed to load tasks");
+                  }
+                }}
+              >
                 View All Tasks
               </Button>
             </CardContent>
@@ -181,7 +195,19 @@ const Dashboard = () => {
                   </p>
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="w-full">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={async () => {
+                  try {
+                    const notifs = await api.fetchNotifications();
+                    toast.info(`Loaded ${notifs.length} notifications`);
+                  } catch (e) {
+                    toast.error("Failed to load notifications");
+                  }
+                }}
+              >
                 View All Notifications
               </Button>
             </CardContent>
@@ -193,15 +219,51 @@ const Dashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={async () => {
+                  try {
+                    await api.getYieldPrediction();
+                    toast.success("Yield prediction requested");
+                  } catch (e) {
+                    toast.error("Failed to get prediction");
+                  }
+                }}
+              >
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Get Yield Prediction
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={async () => {
+                  try {
+                    await api.scheduleIrrigation({ amount: 100 });
+                    toast.success("Irrigation scheduled");
+                  } catch (e) {
+                    toast.error("Failed to schedule irrigation");
+                  }
+                }}
+              >
                 <Droplets className="mr-2 h-4 w-4" />
                 Schedule Irrigation
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={async () => {
+                  try {
+                    await api.setWeatherAlert({ type: "rain" });
+                    toast.success("Weather alert set");
+                  } catch (e) {
+                    toast.error("Failed to set alert");
+                  }
+                }}
+              >
                 <Bell className="mr-2 h-4 w-4" />
                 Set Weather Alert
               </Button>
